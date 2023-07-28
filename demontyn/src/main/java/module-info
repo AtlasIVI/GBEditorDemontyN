@@ -1,0 +1,6 @@
+module org.helmo {
+	requires javafx.controls;
+	requires java.desktop;
+	requires javafx.graphics;
+	exports org.helmo.gbeditor;
+}
