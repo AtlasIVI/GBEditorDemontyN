@@ -1,10 +1,10 @@
 package org.helmo.gbeditor.infrastructures;
 
-import com.mysql.cj.exceptions.UnableToConnectException;
-import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import org.helmo.gbeditor.models.Autor;
 import org.helmo.gbeditor.repository.RepositoryInterface;
-import org.helmo.gbeditor.repository.exceptions.*;
+import org.helmo.gbeditor.repository.exceptions.UnableToConnect;
+import org.helmo.gbeditor.repository.exceptions.UnableToGetAllAutors;
+import org.helmo.gbeditor.repository.exceptions.UnableToSaveAutor;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
 package org.helmo.gbeditor.views;
 
-public interface ViewsInteface {
+public class EditBookDisplay {
 }
