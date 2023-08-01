@@ -13,6 +13,8 @@ public class ViewsNavigator {
     private LoginDisplay loginDisplay;
     private MainView mainView;
     private CreateBookDisplay createBookDisplay;
+    private EditBookDisplay editBookDisplay;
+
     public ViewsNavigator(Stage primaryStage, RepositoryInterface repository) {
 
         this.primaryStage = primaryStage;
@@ -28,19 +30,29 @@ public class ViewsNavigator {
     }
 
     public void switchToLoginDisplay() {
-        if(this.loginDisplay == null) {
+        if (this.loginDisplay == null) {
             this.loginDisplay = new LoginDisplay();
-            new ILoginPresenter(this.loginDisplay,this, repository);
+            new ILoginPresenter(this.loginDisplay, this, repository);
         }
         this.loginDisplay.start(primaryStage);
     }
 
     public void switchToCreateBookDisplay(Autor autor) {
-        if(this.createBookDisplay == null) {
+        if (this.createBookDisplay == null) {
             this.createBookDisplay = new CreateBookDisplay();
-            new CreateBookPresenter(this.createBookDisplay,this, repository, autor);
+            new CreateBookPresenter(this.createBookDisplay, this, repository, autor);
         }
         this.createBookDisplay.start(primaryStage);
 
     }
+
+    public void switchToEditBookDisplay(String bookTitle, String bookResume, String isbn, Autor autor) {
+        if (this.editBookDisplay == null) {
+            this.editBookDisplay = new EditBookDisplay();
+            new CreateBookPresenter(this.editBookDisplay, this, repository, autor, bookTitle, bookResume, isbn);
+        }
+        this.editBookDisplay.start(primaryStage);
+
+    }
+
 }

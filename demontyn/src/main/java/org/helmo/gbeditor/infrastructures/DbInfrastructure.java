@@ -45,7 +45,6 @@ public class DbInfrastructure implements RepositoryInterface {
         }
     }
     //</editor-fold>
-
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des auteurs">
     @Override
     public int saveAutor(Autor autor) throws UnableToSaveAutor, UnableToConnect {
@@ -85,10 +84,6 @@ public class DbInfrastructure implements RepositoryInterface {
         return result;
     }
     //</editor-fold>
-
-
-
-
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement interne">
 
     /**
@@ -106,6 +101,4 @@ public class DbInfrastructure implements RepositoryInterface {
         }
     }
     //</editor-fold>
-
-
 }

@@ -18,6 +18,7 @@ public class CreateBookDisplay implements ICreateBookDisplay {
     private ICreateBookPresenter createBookPresenter;
 
     private Label lAutorName = new Label("Autor :");
+    private Label lErrorMessage = new Label("");
 
     GridPane topPane = new GridPane();
     {
@@ -40,7 +41,7 @@ public class CreateBookDisplay implements ICreateBookDisplay {
         centerCreateBookPane.add(entryTitle, 1, 1);
 
         centerCreateBookPane.add(new Label("Entrez votre matricule"), 1, 2);
-        TextArea matricule = new TextArea();
+        TextField matricule = new TextField();
         centerCreateBookPane.add(matricule, 1, 3);
 
 
@@ -52,6 +53,8 @@ public class CreateBookDisplay implements ICreateBookDisplay {
         Button valid = new Button("Valider");
         valid.setOnAction(action -> createBookPresenter.switchToEditBookView(entryTitle.getText().strip(), resume.getText().strip(), matricule.getText().strip()));
         centerCreateBookPane.add(valid, 1, 6);
+
+        centerCreateBookPane.add(lErrorMessage, 1, 7);
     }
 
 
@@ -79,6 +82,6 @@ public class CreateBookDisplay implements ICreateBookDisplay {
 
     @Override
     public void displayError(String message) {
-
+        lErrorMessage.setText(message);
     }
 }

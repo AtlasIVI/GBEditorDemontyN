@@ -30,28 +30,22 @@ public class CreateBookPresenter implements ICreateBookPresenter {
         return autor.getCompletName();
     }
 
-    //TODO Faire la génération auto de l'isbn des livres
     @Override
     public String getISBN(String matricule) {
         var isbn = "2";
         if (Character.isLetter(matricule.charAt(0))) {
             isbn += matricule.substring(1, 7);
+        }else {
+            isbn += matricule.substring(0, 6);
         }
         isbn += String.format("%02d", (int) (Math.random() * 20));
-        var somme = 0;
-        for (int i = 0; i < 9; i++) {
-            somme += Integer.parseInt(isbn.substring(i, i + 1)) * (10 - i);
-        }
-        var modulo = somme % 11;
-        modulo = 11 - modulo;
-        if (modulo == 11) {
-            modulo = 0;
-        } else if (modulo == 10) {
-            modulo = 1;
-        }
-        isbn += modulo;
+        int reste = getCode(isbn);
+        isbn += reste;
+        isbn = isbn.charAt(0) + "-" + isbn.substring(1, 7) + "-" + isbn.substring(7, 9) + "-" + isbn.substring(9);
         return isbn;
     }
+
+
 
     @Override
     public void switchToEditBookView(String bookTitle, String bookResume, String matricule) {
@@ -64,4 +58,32 @@ public class CreateBookPresenter implements ICreateBookPresenter {
         }
 
     }
+
+
+
+
+    private int getCode(String isbn) {
+        int somme = 0;
+        for (int i = 0; i < isbn.length() - 1; i++) {
+            somme += Integer.parseInt(isbn.substring(i, i + 1)) * (10 - i);
+        }
+        int reste = 11 -(somme % 11);
+        if (reste == 10) {
+            reste = 1;
+        } else if (reste == 11) {
+            reste = 0;
+        }
+        return reste;
+    }
+
+
+
+
+
+
+
+
+
+
+
 }
