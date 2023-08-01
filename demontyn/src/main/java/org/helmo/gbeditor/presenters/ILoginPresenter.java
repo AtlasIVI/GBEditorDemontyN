@@ -5,14 +5,13 @@ import org.helmo.gbeditor.presenters.interfaceview.ILoginDisplay;
 import org.helmo.gbeditor.repository.RepositoryInterface;
 import org.helmo.gbeditor.repository.exceptions.UnableToConnect;
 import org.helmo.gbeditor.repository.exceptions.UnableToGetAllAutors;
-import org.helmo.gbeditor.views.interfacepresenter.LoginPresenterInterface;
 import org.helmo.gbeditor.views.ViewsNavigator;
 
-public class LoginPresenter implements LoginPresenterInterface {
+public class ILoginPresenter implements org.helmo.gbeditor.views.interfacepresenter.ILoginPresenter {
     private final ViewsNavigator viewsNavigator;
     private final RepositoryInterface repository;
     private final ILoginDisplay loginDisplay;
-    public LoginPresenter(ILoginDisplay loginDisplay, ViewsNavigator viewsNavigator, RepositoryInterface repository) {
+    public ILoginPresenter(ILoginDisplay loginDisplay, ViewsNavigator viewsNavigator, RepositoryInterface repository) {
         this.loginDisplay = loginDisplay;
         this.viewsNavigator = viewsNavigator;
         this.repository = repository;
@@ -26,13 +25,13 @@ public class LoginPresenter implements LoginPresenterInterface {
         try{
             for (Autor autor: repository.getAllAutor()) {
                 if(autor.getFirstname().equals(firstname) && autor.getName().equals(lastname)){
+                    System.out.println("gsd");
                     viewsNavigator.switchToCreateBookDisplay(autor);
                     return;
                 }
             }
             repository.saveAutor(new Autor(firstname, lastname));
             viewsNavigator.switchToCreateBookDisplay(autorEntry);
-
 
         }catch (UnableToConnect e){
             loginDisplay.displayError("Unable to connect to the server");

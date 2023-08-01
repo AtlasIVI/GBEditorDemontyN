@@ -3,14 +3,14 @@ package org.helmo.gbeditor.views;
 import javafx.stage.Stage;
 import org.helmo.gbeditor.models.Autor;
 import org.helmo.gbeditor.presenters.CreateBookPresenter;
-import org.helmo.gbeditor.presenters.LoginPresenter;
+import org.helmo.gbeditor.presenters.ILoginPresenter;
 import org.helmo.gbeditor.presenters.MainPresenter;
 import org.helmo.gbeditor.repository.RepositoryInterface;
 
 public class ViewsNavigator {
     private final RepositoryInterface repository;
     private Stage primaryStage;
-    private ILoginDisplay loginDisplay;
+    private LoginDisplay loginDisplay;
     private MainView mainView;
     private CreateBookDisplay createBookDisplay;
     public ViewsNavigator(Stage primaryStage, RepositoryInterface repository) {
@@ -29,8 +29,8 @@ public class ViewsNavigator {
 
     public void switchToLoginDisplay() {
         if(this.loginDisplay == null) {
-            this.loginDisplay = new ILoginDisplay();
-            new LoginPresenter(this.loginDisplay,this, repository);
+            this.loginDisplay = new LoginDisplay();
+            new ILoginPresenter(this.loginDisplay,this, repository);
         }
         this.loginDisplay.start(primaryStage);
     }

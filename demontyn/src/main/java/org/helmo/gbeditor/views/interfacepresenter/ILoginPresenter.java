@@ -1,6 +1,6 @@
 package org.helmo.gbeditor.views.interfacepresenter;
 
-public interface LoginPresenterInterface {
+public interface ILoginPresenter {
     void login(String firstname, String lastname);
 
 

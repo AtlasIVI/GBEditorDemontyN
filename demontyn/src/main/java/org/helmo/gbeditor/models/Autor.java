@@ -35,7 +35,7 @@ public class Autor {
     }
 
     public String getCompletName() {
-        return this.name + "" + this.firstname;
+        return this.name + " " + this.firstname;
     }
 
     public String getMatricule() {

@@ -8,11 +8,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import org.helmo.gbeditor.views.interfacepresenter.LoginPresenterInterface;
+import org.helmo.gbeditor.views.interfacepresenter.ILoginPresenter;
 
-public class ILoginDisplay implements org.helmo.gbeditor.presenters.interfaceview.ILoginDisplay {
+public class LoginDisplay implements org.helmo.gbeditor.presenters.interfaceview.ILoginDisplay {
 
-    private LoginPresenterInterface loginPresenter;
+    private ILoginPresenter loginPresenter;
 
     private Label errorMessage = new Label();
 
@@ -50,7 +50,7 @@ public class ILoginDisplay implements org.helmo.gbeditor.presenters.interfacevie
     }
 
     @Override
-    public void setLoginPresenterInterface(LoginPresenterInterface loginPresenter) {
+    public void setLoginPresenterInterface(ILoginPresenter loginPresenter) {
         this.loginPresenter = loginPresenter;
     }
     @Override

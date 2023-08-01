@@ -5,6 +5,7 @@ import org.helmo.gbeditor.repository.RepositoryInterface;
 import org.helmo.gbeditor.repository.exceptions.UnableToConnect;
 import org.helmo.gbeditor.repository.exceptions.UnableToGetAllAutors;
 import org.helmo.gbeditor.repository.exceptions.UnableToSaveAutor;
+import org.helmo.gbeditor.repository.exceptions.UnableToSaveBook;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -30,6 +31,22 @@ public class DbInfrastructure implements RepositoryInterface {
         }
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des livres">
+    @Override
+    public void saveBook(String bookTitle, String bookResume, String isbn, Autor autor) throws UnableToConnect, UnableToSaveBook {
+        try (PreparedStatement prepareStatement = getConnection().prepareStatement("INSERT INTO Book (title_Book, resume_Book, isbn_Book, matricule_Autor) VALUES (?, ?, ?, ?)")) {
+            prepareStatement.setString(1, bookTitle);
+            prepareStatement.setString(2, bookResume);
+            prepareStatement.setString(3, isbn);
+            prepareStatement.setString(4, autor.getMatricule());
+            prepareStatement.execute();
+        } catch (SQLException e) {
+            throw new UnableToSaveBook();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des auteurs">
     @Override
     public int saveAutor(Autor autor) throws UnableToSaveAutor, UnableToConnect {
         int matricule = 0;
@@ -67,6 +84,10 @@ public class DbInfrastructure implements RepositoryInterface {
         }
         return result;
     }
+    //</editor-fold>
+
+
+
 
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement interne">
 
