@@ -71,7 +71,6 @@ public class CreateBookDisplay implements ICreateBookDisplay {
     public void setICreateBookPresenter(ICreateBookPresenter createBookPresenter) {
         this.createBookPresenter = createBookPresenter;
         this.lAutorName.setText("Autor : " + createBookPresenter.getAutorName());
-
     }
 
     @Override

@@ -2,14 +2,14 @@ package org.helmo.gbeditor.repository;
 
 
 import org.helmo.gbeditor.models.Autor;
-import org.helmo.gbeditor.repository.exceptions.UnableToConnect;
-import org.helmo.gbeditor.repository.exceptions.UnableToGetAllAutors;
-import org.helmo.gbeditor.repository.exceptions.UnableToSaveAutor;
-import org.helmo.gbeditor.repository.exceptions.UnableToSaveBook;
+import org.helmo.gbeditor.models.Book;
+import org.helmo.gbeditor.repository.exceptions.*;
 
 import java.util.List;
 
 public interface RepositoryInterface {
+
+    List<Book> getAllBooksFromAutor(int id_Autor) throws UnableToGetAllBooks, UnableToConnect;
 
     /**
      * @param autor

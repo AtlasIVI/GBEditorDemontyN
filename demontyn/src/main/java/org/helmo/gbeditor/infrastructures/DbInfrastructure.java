@@ -1,11 +1,9 @@
 package org.helmo.gbeditor.infrastructures;
 
 import org.helmo.gbeditor.models.Autor;
+import org.helmo.gbeditor.models.Book;
 import org.helmo.gbeditor.repository.RepositoryInterface;
-import org.helmo.gbeditor.repository.exceptions.UnableToConnect;
-import org.helmo.gbeditor.repository.exceptions.UnableToGetAllAutors;
-import org.helmo.gbeditor.repository.exceptions.UnableToSaveAutor;
-import org.helmo.gbeditor.repository.exceptions.UnableToSaveBook;
+import org.helmo.gbeditor.repository.exceptions.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,12 +42,33 @@ public class DbInfrastructure implements RepositoryInterface {
             throw new UnableToSaveBook();
         }
     }
+
+    @Override
+    public List<Book> getAllBooksFromAutor(int id_Autor) throws UnableToGetAllBooks, UnableToConnect {
+        var result = new ArrayList<Book>();
+        try (PreparedStatement prepareStatement = getConnection().prepareStatement("SELECT * FROM Book WHERE matricule_Autor = ?")) {
+            prepareStatement.setInt(1, id_Autor);
+            prepareStatement.execute();
+            var resSet = prepareStatement.executeQuery();
+            while (resSet.next()) {
+                result.add(new Book(resSet.getString("title_Book"), resSet.getString("resume_Book"), resSet.getString("isbn_Book"), resSet.getString("matricule_Autor")));
+            }
+        } catch (SQLException e) {
+            throw new UnableToGetAllBooks();
+        } catch (UnableToConnect e) {
+            throw new UnableToConnect();
+        }
+
+
+        return result;
+    }
+
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des auteurs">
     @Override
     public int saveAutor(Autor autor) throws UnableToSaveAutor, UnableToConnect {
         int matricule = 0;
-        try (PreparedStatement prepareStatement = getConnection().prepareStatement("INSERT INTO Autor (name_Autor, firstname_Autor) VALUES (?, ?)",Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement prepareStatement = getConnection().prepareStatement("INSERT INTO Autor (name_Autor, firstname_Autor) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             prepareStatement.setString(1, autor.getName());
             prepareStatement.setString(2, autor.getFirstname());
             prepareStatement.execute();

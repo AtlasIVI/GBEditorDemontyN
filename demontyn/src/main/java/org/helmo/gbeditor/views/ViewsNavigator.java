@@ -3,8 +3,9 @@ package org.helmo.gbeditor.views;
 import javafx.stage.Stage;
 import org.helmo.gbeditor.models.Autor;
 import org.helmo.gbeditor.presenters.CreateBookPresenter;
-import org.helmo.gbeditor.presenters.ILoginPresenter;
+import org.helmo.gbeditor.presenters.LoginPresenter;
 import org.helmo.gbeditor.presenters.MainPresenter;
+import org.helmo.gbeditor.presenters.SeeAllBooksPresenter;
 import org.helmo.gbeditor.repository.RepositoryInterface;
 
 public class ViewsNavigator {
@@ -14,6 +15,7 @@ public class ViewsNavigator {
     private MainView mainView;
     private CreateBookDisplay createBookDisplay;
     private EditBookDisplay editBookDisplay;
+    private SeeAllBooksDisplay seeAllBooksDisplay;
 
     public ViewsNavigator(Stage primaryStage, RepositoryInterface repository) {
 
@@ -32,7 +34,7 @@ public class ViewsNavigator {
     public void switchToLoginDisplay() {
         if (this.loginDisplay == null) {
             this.loginDisplay = new LoginDisplay();
-            new ILoginPresenter(this.loginDisplay, this, repository);
+            new LoginPresenter(this.loginDisplay, this, repository);
         }
         this.loginDisplay.start(primaryStage);
     }
@@ -46,12 +48,22 @@ public class ViewsNavigator {
 
     }
 
+    //TODO FINIR la redirection vers l'édition d'un livre
     public void switchToEditBookDisplay(String bookTitle, String bookResume, String isbn, Autor autor) {
         if (this.editBookDisplay == null) {
             this.editBookDisplay = new EditBookDisplay();
-            new CreateBookPresenter(this.editBookDisplay, this, repository, autor, bookTitle, bookResume, isbn);
+            //new CreateBookPresenter(this.editBookDisplay, this, repository, autor, bookTitle, bookResume, isbn);
         }
-        this.editBookDisplay.start(primaryStage);
+        //this.editBookDisplay.start(primaryStage);
+
+    }
+
+    public void switchToSeeAllBooks(Autor autor) {
+        if (this.seeAllBooksDisplay == null) {
+            this.seeAllBooksDisplay = new SeeAllBooksDisplay();
+            new SeeAllBooksPresenter(this.seeAllBooksDisplay, this, repository, autor);
+        }
+        this.seeAllBooksDisplay.start(primaryStage);
 
     }
 

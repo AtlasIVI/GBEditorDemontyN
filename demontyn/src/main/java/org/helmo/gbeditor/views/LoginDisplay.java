@@ -8,9 +8,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.helmo.gbeditor.presenters.interfaceview.ILoginDisplay;
 import org.helmo.gbeditor.views.interfacepresenter.ILoginPresenter;
 
-public class LoginDisplay implements org.helmo.gbeditor.presenters.interfaceview.ILoginDisplay {
+public class LoginDisplay implements ILoginDisplay {
 
     private ILoginPresenter loginPresenter;
 

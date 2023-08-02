@@ -35,7 +35,7 @@ public class CreateBookPresenter implements ICreateBookPresenter {
         var isbn = "2";
         if (Character.isLetter(matricule.charAt(0))) {
             isbn += matricule.substring(1, 7);
-        }else {
+        } else {
             isbn += matricule.substring(0, 6);
         }
         isbn += String.format("%02d", (int) (Math.random() * 20));
@@ -45,10 +45,24 @@ public class CreateBookPresenter implements ICreateBookPresenter {
         return isbn;
     }
 
-
-
     @Override
     public void switchToEditBookView(String bookTitle, String bookResume, String matricule) {
+        if (bookTitle.isBlank() || bookResume.isBlank() || matricule.isBlank()) {
+            createBookDisplay.displayError("Tous les paramètres doivent être remplis");
+            return;
+        }
+        if (bookTitle.length() > 150) {
+            createBookDisplay.displayError("Le titre du livre ne peut pas dépasser les 150 caractères");
+            return;
+        }
+        if (bookResume.length() > 500) {
+            createBookDisplay.displayError("Le résumé du livre ne peut pas dépasser les 500 caractères");
+            return;
+        }
+        if (matricule.length() < 6 || matricule.length() > 7) {
+            createBookDisplay.displayError("Le matricule doit être composé de 6 ou 7 caractères");
+            return;
+        }
         var isbn = getISBN(matricule);
         try {
             repository.saveBook(bookTitle, bookResume, isbn, autor);
@@ -56,18 +70,14 @@ public class CreateBookPresenter implements ICreateBookPresenter {
         } catch (Exception e) {
             createBookDisplay.displayError("Unable to save book");
         }
-
     }
-
-
-
 
     private int getCode(String isbn) {
         int somme = 0;
         for (int i = 0; i < isbn.length() - 1; i++) {
             somme += Integer.parseInt(isbn.substring(i, i + 1)) * (10 - i);
         }
-        int reste = 11 -(somme % 11);
+        int reste = 11 - (somme % 11);
         if (reste == 10) {
             reste = 1;
         } else if (reste == 11) {
@@ -75,15 +85,5 @@ public class CreateBookPresenter implements ICreateBookPresenter {
         }
         return reste;
     }
-
-
-
-
-
-
-
-
-
-
 
 }
