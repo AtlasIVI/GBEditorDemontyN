@@ -15,10 +15,14 @@ public class Book {
     }
 
     public String getTitle() {
-        return  title;
+        return title;
     }
 
     public String getResume() {
         return resume;
+    }
+
+    public String getIsbn() {
+        return isbn;
     }
 }

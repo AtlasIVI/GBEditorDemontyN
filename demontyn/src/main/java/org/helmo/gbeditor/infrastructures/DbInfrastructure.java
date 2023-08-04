@@ -2,14 +2,14 @@ package org.helmo.gbeditor.infrastructures;
 
 import org.helmo.gbeditor.models.Autor;
 import org.helmo.gbeditor.models.Book;
-import org.helmo.gbeditor.repository.RepositoryInterface;
+import org.helmo.gbeditor.repository.Repository;
 import org.helmo.gbeditor.repository.exceptions.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbInfrastructure implements RepositoryInterface {
+public class DbInfrastructure implements Repository {
 
     private String dbUrl;
     private String username;
@@ -17,7 +17,7 @@ public class DbInfrastructure implements RepositoryInterface {
     private String driverName;
 
 
-    public DbInfrastructure(String driverName, String dbUrl, String username, String password) {
+    public DbInfrastructure(String driverName, String dbUrl, String username, String password) throws UnableToConnect {
         this.dbUrl = dbUrl;
         this.username = username;
         this.password = password;
@@ -25,7 +25,7 @@ public class DbInfrastructure implements RepositoryInterface {
         try {
             Class.forName(driverName);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new UnableToConnect();
         }
     }
 
@@ -44,10 +44,10 @@ public class DbInfrastructure implements RepositoryInterface {
     }
 
     @Override
-    public List<Book> getAllBooksFromAutor(int id_Autor) throws UnableToGetAllBooks, UnableToConnect {
+    public List<Book> getAllBooksFromAutor(String id_Autor) throws UnableToGetAllBooks, UnableToConnect {
         var result = new ArrayList<Book>();
         try (PreparedStatement prepareStatement = getConnection().prepareStatement("SELECT * FROM Book WHERE matricule_Autor = ?")) {
-            prepareStatement.setInt(1, id_Autor);
+            prepareStatement.setString(1, id_Autor);
             prepareStatement.execute();
             var resSet = prepareStatement.executeQuery();
             while (resSet.next()) {
@@ -64,6 +64,7 @@ public class DbInfrastructure implements RepositoryInterface {
     }
 
     //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des auteurs">
     @Override
     public int saveAutor(Autor autor) throws UnableToSaveAutor, UnableToConnect {
@@ -102,7 +103,26 @@ public class DbInfrastructure implements RepositoryInterface {
         }
         return result;
     }
+
+    @Override
+    public Autor getAutorByNames(String firstname, String lastname) throws UnableToGetAutor, UnableToConnect {
+        try(PreparedStatement prepareStatement = getConnection().prepareStatement("SELECT * FROM Autor WHERE name_Autor = ? AND firstname_Autor = ?")){
+            prepareStatement.setString(1, lastname);
+            prepareStatement.setString(2, firstname);
+            prepareStatement.execute();
+            var resSet = prepareStatement.executeQuery();
+            if(resSet.next()){
+                return new Autor(resSet.getString("name_Autor"), resSet.getString("firstname_Autor"), resSet.getString("matricule_Autor"));
+            }
+        } catch (SQLException e) {
+            throw new UnableToGetAutor();
+        }
+        return null;
+    }
+
+
     //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement interne">
 
     /**

@@ -7,9 +7,9 @@ import org.helmo.gbeditor.repository.exceptions.*;
 
 import java.util.List;
 
-public interface RepositoryInterface {
+public interface Repository {
 
-    List<Book> getAllBooksFromAutor(int id_Autor) throws UnableToGetAllBooks, UnableToConnect;
+    List<Book> getAllBooksFromAutor(String id_Autor) throws UnableToGetAllBooks, UnableToConnect;
 
     /**
      * @param autor
@@ -25,6 +25,8 @@ public interface RepositoryInterface {
      * @throws UnableToConnect
      */
     List<Autor> getAllAutor() throws UnableToGetAllAutors, UnableToConnect;
+
+    Autor getAutorByNames(String firstname, String lastname) throws UnableToGetAutor, UnableToConnect;
 
     void saveBook(String bookTitle, String bookResume, String isbn, Autor autor) throws UnableToConnect, UnableToSaveBook;
 

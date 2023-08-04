@@ -5,11 +5,17 @@ package org.helmo.gbeditor;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.helmo.gbeditor.infrastructures.DbInfrastructure;
-import org.helmo.gbeditor.repository.RepositoryInterface;
-import org.helmo.gbeditor.views.ViewsNavigator;
+import org.helmo.gbeditor.presenter.AllBooksPresenter;
+import org.helmo.gbeditor.presenter.CreateBookPresenter;
+import org.helmo.gbeditor.presenter.EditBookPresenter;
+import org.helmo.gbeditor.presenter.LoginPresenter;
+import org.helmo.gbeditor.repository.Repository;
+import org.helmo.gbeditor.views.*;
 
 public class App extends Application {
+
 
     public final static String DBURL = "jdbc:mysql://asterix-intra.cg.helmo.be:13306/Q210037";
     public final static String DBUSER = "Q210037";
@@ -18,17 +24,39 @@ public class App extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(args);
     }
 
 
+    @Override
     public void start(Stage primaryStage) throws Exception {
-        RepositoryInterface repository = new DbInfrastructure(DRIVER, DBURL, DBUSER, DBPASS);
-        var viewNavigator = new ViewsNavigator(primaryStage, repository);
-        viewNavigator.switchToLoginDisplay();
-        primaryStage.setTitle("GameBook");
 
 
+
+        Repository repo = new DbInfrastructure(DRIVER, DBURL, DBUSER, DBPASS);
+
+        MainWindow view = new MainWindow(
+                new LoginView(new LoginPresenter(repo)),
+                new AllBooksView(new AllBooksPresenter(repo)),
+                new CreateBookView(new CreateBookPresenter(repo)),
+                new EditBookView(new EditBookPresenter(repo))
+        );
+
+
+
+        initStage(primaryStage);
+
+
+        primaryStage.setScene(view.getScene());
+        primaryStage.show();
+    }
+
+
+    private void initStage(Stage primaryStage) {
+        primaryStage.setResizable(false);
+        primaryStage.initStyle(StageStyle.DECORATED);
+        primaryStage.setWidth(1500);
+        primaryStage.setHeight(800);
 
     }
 }
