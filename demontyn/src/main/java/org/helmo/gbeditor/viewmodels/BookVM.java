@@ -33,5 +33,8 @@ public class BookVM {
         return autor;
     }
 
+    public Book getBook() {
+        return new Book(title, resume, isbn, autor);
+    }
 
 }

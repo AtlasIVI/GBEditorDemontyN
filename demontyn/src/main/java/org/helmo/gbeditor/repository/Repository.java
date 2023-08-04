@@ -11,6 +11,8 @@ public interface Repository {
 
     List<Book> getAllBooksFromAutor(String id_Autor) throws UnableToGetAllBooks, UnableToConnect;
 
+    void editBook(Book oldBook, Book newBook) throws UnableToEditBook, UnableToConnect;
+
     /**
      * @param autor
      * @return le matricule auto-incrémenté de l'auteur ajouté
@@ -28,7 +30,7 @@ public interface Repository {
 
     Autor getAutorByNames(String firstname, String lastname) throws UnableToGetAutor, UnableToConnect;
 
-    void saveBook(String bookTitle, String bookResume, String isbn, Autor autor) throws UnableToConnect, UnableToSaveBook;
+    void saveBook(Book book) throws UnableToConnect, UnableToSaveBook;
 
 
 }

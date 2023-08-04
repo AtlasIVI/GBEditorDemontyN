@@ -28,11 +28,11 @@ public class LoginPresenter {
         try{
             var existingAutor = repo.getAutorByNames(firstname, lastname);
             if(existingAutor != null){
-                view.goTo(ViewType.SEE_ALL_BOOKS,new NavigationArg(existingAutor));
+                view.goTo(ViewType.SEE_ALL_BOOKS,new NavigationArg(existingAutor,null,null));
                 return;
             }
             var autorId = repo.saveAutor(new Autor(lastname, firstname));
-            view.goTo(ViewType.SEE_ALL_BOOKS,new NavigationArg(new Autor(lastname, firstname,String.valueOf(autorId))));
+            view.goTo(ViewType.SEE_ALL_BOOKS,new NavigationArg(new Autor(lastname, firstname,String.valueOf(autorId)),null,null));
 
         } catch (UnableToGetAutor e) {
             view.throwAlert("Unable to get autor");

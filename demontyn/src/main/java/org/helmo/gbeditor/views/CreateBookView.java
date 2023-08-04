@@ -29,9 +29,7 @@ public class CreateBookView extends ViewJavaFx implements ICreateBookView {
 
     }
 
-    GridPane leftPane = new GridPane();
-
-    {
+    GridPane leftPane = new GridPane();{
         leftPane.setAlignment(Pos.TOP_LEFT);
         leftPane.add(lAutorName, 0, 0);
     }

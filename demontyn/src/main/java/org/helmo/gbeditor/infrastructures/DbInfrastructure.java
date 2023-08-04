@@ -31,12 +31,12 @@ public class DbInfrastructure implements Repository {
 
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des livres">
     @Override
-    public void saveBook(String bookTitle, String bookResume, String isbn, Autor autor) throws UnableToConnect, UnableToSaveBook {
+    public void saveBook(Book book) throws UnableToConnect, UnableToSaveBook {
         try (PreparedStatement prepareStatement = getConnection().prepareStatement("INSERT INTO Book (title_Book, resume_Book, isbn_Book, matricule_Autor) VALUES (?, ?, ?, ?)")) {
-            prepareStatement.setString(1, bookTitle);
-            prepareStatement.setString(2, bookResume);
-            prepareStatement.setString(3, isbn);
-            prepareStatement.setString(4, autor.getMatricule());
+            prepareStatement.setString(1, book.getTitle());
+            prepareStatement.setString(2, book.getResume());
+            prepareStatement.setString(3, book.getIsbn());
+            prepareStatement.setString(4, book.getAutorMatricule());
             prepareStatement.execute();
         } catch (SQLException e) {
             throw new UnableToSaveBook();
@@ -58,9 +58,20 @@ public class DbInfrastructure implements Repository {
         } catch (UnableToConnect e) {
             throw new UnableToConnect();
         }
-
-
         return result;
+    }
+
+    @Override
+    public void editBook(Book oldBook, Book newBook) throws UnableToEditBook, UnableToConnect {
+        try (PreparedStatement prepareStatement = getConnection().prepareStatement("UPDATE Book SET title_Book = ?, resume_Book = ? WHERE isbn_Book = ? AND title_Book = ?")) {
+            prepareStatement.setString(1, newBook.getTitle());
+            prepareStatement.setString(2, newBook.getResume());
+            prepareStatement.setString(3, oldBook.getIsbn());
+            prepareStatement.setString(4, oldBook.getTitle());
+            prepareStatement.execute();
+        } catch (SQLException e) {
+            throw new UnableToEditBook();
+        }
     }
 
     //</editor-fold>
@@ -106,12 +117,12 @@ public class DbInfrastructure implements Repository {
 
     @Override
     public Autor getAutorByNames(String firstname, String lastname) throws UnableToGetAutor, UnableToConnect {
-        try(PreparedStatement prepareStatement = getConnection().prepareStatement("SELECT * FROM Autor WHERE name_Autor = ? AND firstname_Autor = ?")){
+        try (PreparedStatement prepareStatement = getConnection().prepareStatement("SELECT * FROM Autor WHERE name_Autor = ? AND firstname_Autor = ?")) {
             prepareStatement.setString(1, lastname);
             prepareStatement.setString(2, firstname);
             prepareStatement.execute();
             var resSet = prepareStatement.executeQuery();
-            if(resSet.next()){
+            if (resSet.next()) {
                 return new Autor(resSet.getString("name_Autor"), resSet.getString("firstname_Autor"), resSet.getString("matricule_Autor"));
             }
         } catch (SQLException e) {

@@ -1,5 +1,6 @@
 package org.helmo.gbeditor.presenter;
 
+import org.helmo.gbeditor.models.Book;
 import org.helmo.gbeditor.presenter.arg.NavigationArg;
 import org.helmo.gbeditor.presenter.interfaceview.ICreateBookView;
 import org.helmo.gbeditor.presenter.interfaceview.ILoginView;
@@ -35,9 +36,10 @@ public class CreateBookPresenter {
         }
         var isbn = getISBN(matricule);
         try {
-            repository.saveBook(bookTitle, bookResume, isbn, autor);
-            viewsNavigator.switchToEditBookDisplay(bookTitle, bookResume, isbn, autor);
-            view.goTo(ViewType.SEE_ALL_BOOKS,args);
+            var book = new Book(title, resume, isbn, args.autor.getMatricule());
+            repo.saveBook(book);
+
+            view.goTo(ViewType.SEE_ALL_BOOKS,new NavigationArg(args.autor,book,null));
         } catch (Exception e) {
             view.throwAlert("Unable to save book");
         }
