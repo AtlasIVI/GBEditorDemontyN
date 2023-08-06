@@ -1,15 +1,17 @@
-package org.helmo.gbeditor.models;
+package org.helmo.gbeditor.viewmodels;
 
-public class Page {
+import org.helmo.gbeditor.models.Page;
 
+public class PageVM {
     private String textPage;
     private int numberPage;
 
-    public Page(String textPage, int numberPage) {
-        this.textPage = textPage;
-        this.numberPage = numberPage;
+    public PageVM(Page page) {
+        this.textPage = page.getTextPage();
+        this.numberPage = page.getNumberPage();
     }
 
+    //<editor-fold desc="Getters and Setters">
     public String getTextPage() {
         return textPage;
     }
@@ -25,5 +27,9 @@ public class Page {
     public void setNumberPage(int numberPage) {
         this.numberPage = numberPage;
     }
+    //</editor-fold>
 
+    public Page getPage() {
+        return new Page(textPage, numberPage);
+    }
 }

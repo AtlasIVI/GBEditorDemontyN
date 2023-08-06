@@ -7,10 +7,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.helmo.gbeditor.infrastructures.DbInfrastructure;
-import org.helmo.gbeditor.presenter.AllBooksPresenter;
-import org.helmo.gbeditor.presenter.CreateBookPresenter;
-import org.helmo.gbeditor.presenter.EditBookPresenter;
-import org.helmo.gbeditor.presenter.LoginPresenter;
+import org.helmo.gbeditor.presenter.*;
 import org.helmo.gbeditor.repository.Repository;
 import org.helmo.gbeditor.views.*;
 
@@ -39,7 +36,8 @@ public class App extends Application {
                 new LoginView(new LoginPresenter(repo)),
                 new AllBooksView(new AllBooksPresenter(repo)),
                 new CreateBookView(new CreateBookPresenter(repo)),
-                new EditBookView(new EditBookPresenter(repo))
+                new EditBookView(new EditBookPresenter(repo)),
+                new AllPageView(new AllPagePresenter(repo))
         );
 
 

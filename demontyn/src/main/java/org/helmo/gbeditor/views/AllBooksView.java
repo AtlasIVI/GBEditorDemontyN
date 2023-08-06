@@ -42,7 +42,7 @@ public class AllBooksView extends ViewJavaFx implements IAllBooksView {
     private Label nbrPage = new Label();
     private Button editBtn = new Button("Edit");
     private Button deleteBtn = new Button("Delete");
-    private Button addPageBtn = new Button("Add Page");
+    private Button addPageBtn = new Button("All Pages");
     //</editor-fold>
     private GridPane topPane = new GridPane();{
         topPane.setAlignment(Pos.TOP_CENTER);
@@ -85,14 +85,7 @@ public class AllBooksView extends ViewJavaFx implements IAllBooksView {
         root = new BorderPane();
 
 
-        table = new TableView<>();
-        titleCol = new TableColumn<>("Title");
-        titleCol.setPrefWidth(300);
-        isbnCol = new TableColumn<>("ISBN");
-        isbnCol.setPrefWidth(300);
-        autorCol = new TableColumn<>("Author");
-        autorCol.setPrefWidth(300);
-        table.getColumns().addAll(titleCol, isbnCol, autorCol);
+
 
     }
 
@@ -110,11 +103,8 @@ public class AllBooksView extends ViewJavaFx implements IAllBooksView {
     public void beforeShow(NavigationArg args) {
         this.booksVM = presenter.getBooksData(args);
         this.autorLabel.setText("Autor : " + args.getAutor().getCompletName());
+        initTab(args);
 
-        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-        isbnCol.setCellValueFactory(new PropertyValueFactory<>("isbn"));
-        autorCol.setCellValueFactory(new PropertyValueFactory<>("autor"));
-        table.setItems(FXCollections.observableArrayList(booksVM));
         GridPane bottomPane = new GridPane();
         {
             bottomPane.setAlignment(Pos.TOP_RIGHT);
@@ -123,6 +113,34 @@ public class AllBooksView extends ViewJavaFx implements IAllBooksView {
             createBookButton.setOnAction(action -> this.goTo(ViewType.CREATE_BOOK, args));
             bottomPane.add(createBookButton, 0, 0);
         }
+        root.setLeft(leftTopPane);
+        root.setTop(topPane);
+        root.setRight(rightPane);
+        root.setBottom(bottomPane);
+        root.setCenter(table);
+
+
+    }
+    //<editor-fold defaultstate="collapsed" desc="Tableau">
+
+    /**
+     * Initialise le tableau
+     * @param args les arguments de navigation
+     */
+    private void initTab(NavigationArg args) {
+        table = new TableView<>();
+        titleCol = new TableColumn<>("Title");
+        titleCol.setPrefWidth(300);
+        isbnCol = new TableColumn<>("ISBN");
+        isbnCol.setPrefWidth(300);
+        autorCol = new TableColumn<>("Author");
+        autorCol.setPrefWidth(300);
+        table.getColumns().addAll(titleCol, isbnCol, autorCol);
+
+        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        isbnCol.setCellValueFactory(new PropertyValueFactory<>("isbn"));
+        autorCol.setCellValueFactory(new PropertyValueFactory<>("autor"));
+        table.setItems(FXCollections.observableArrayList(booksVM));
 
         table.setOnMouseClicked(event -> {
             var book = table.getSelectionModel().getSelectedItem();
@@ -133,22 +151,16 @@ public class AllBooksView extends ViewJavaFx implements IAllBooksView {
                 isbnLabel.setText("ISBN : " + book.getIsbn());
                 nbrPage.setText("Nombre de pages : A FAIRE APRES LES PAGES"  );
                 editBtn.setOnAction(action -> this.goTo(ViewType.EDIT_BOOK, new NavigationArg(args.getAutor(), book.getBook(), null)));
+                addPageBtn.setOnAction(action -> this.goTo(ViewType.All_PAGES, new NavigationArg(args.getAutor(), book.getBook(), null)));
+
             } else {
                 titleLabel.setText("");
                 resumeLabel.setText("");
                 isbnLabel.setText("");
             }
         });
-
-
-        root.setLeft(leftTopPane);
-        root.setTop(topPane);
-        root.setRight(rightPane);
-        root.setBottom(bottomPane);
-        root.setCenter(table);
-
-
     }
+    //</editor-fold>
 
 
 }

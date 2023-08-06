@@ -14,7 +14,6 @@ public class LoginPresenter {
     private ILoginView view;
 
     private Repository repo;
-    private Autor autor;
 
     public LoginPresenter(Repository repo) {
         this.repo = repo;

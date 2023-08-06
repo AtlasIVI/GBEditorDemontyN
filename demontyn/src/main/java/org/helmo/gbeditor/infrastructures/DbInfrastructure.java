@@ -2,6 +2,7 @@ package org.helmo.gbeditor.infrastructures;
 
 import org.helmo.gbeditor.models.Autor;
 import org.helmo.gbeditor.models.Book;
+import org.helmo.gbeditor.models.Page;
 import org.helmo.gbeditor.repository.Repository;
 import org.helmo.gbeditor.repository.exceptions.*;
 
@@ -74,6 +75,24 @@ public class DbInfrastructure implements Repository {
         }
     }
 
+    private int getBookId(Book book) throws UnableToConnect {
+        try {
+            var connection = getConnection();
+            try (PreparedStatement prepareStatement = connection.prepareStatement("SELECT id_Book FROM Book WHERE isbn_Book = ? AND title_Book = ?")) {
+                prepareStatement.setString(1, book.getIsbn());
+                prepareStatement.setString(2, book.getTitle());
+                prepareStatement.execute();
+                var resSet = prepareStatement.executeQuery();
+                if (resSet.next()) {
+                    return resSet.getInt("id_Book");
+                }
+            }
+        } catch (SQLException | UnableToConnect e) {
+            throw new UnableToConnect();
+        }
+        return -1;
+    }
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des auteurs">
@@ -131,6 +150,31 @@ public class DbInfrastructure implements Repository {
         return null;
     }
 
+
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des pages">
+    @Override
+    public List<Page> getAllPagesOfBook(Book book) throws UnableToGetAllPages {
+        var result = new ArrayList<Page>();
+
+        try {
+            int idBook = getBookId(book);
+            if (idBook == -1) return result;
+            PreparedStatement prepareStatement = getConnection().prepareStatement("SELECT * FROM Page WHERE id_Book = ?");
+            prepareStatement.setInt(1, idBook);
+            prepareStatement.execute();
+            var resSet = prepareStatement.executeQuery();
+            while (resSet.next()) {
+                result.add(new Page(resSet.getString("text_Page"), resSet.getInt("number_Page")));
+            }
+        } catch (UnableToConnect e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new UnableToGetAllPages();
+        }
+        return result;
+    }
 
     //</editor-fold>
 
