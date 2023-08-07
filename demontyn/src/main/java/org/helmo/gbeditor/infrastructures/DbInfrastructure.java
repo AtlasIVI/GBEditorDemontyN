@@ -3,6 +3,8 @@ package org.helmo.gbeditor.infrastructures;
 import org.helmo.gbeditor.models.Autor;
 import org.helmo.gbeditor.models.Book;
 import org.helmo.gbeditor.models.Page;
+import org.helmo.gbeditor.models.exceptions.UnableToAddPage;
+import org.helmo.gbeditor.models.exceptions.UnableToConstructPage;
 import org.helmo.gbeditor.repository.Repository;
 import org.helmo.gbeditor.repository.exceptions.*;
 
@@ -93,6 +95,47 @@ public class DbInfrastructure implements Repository {
         return -1;
     }
 
+    @Override
+    public void updatePageBook(Book currentBook) {
+        Connection connection = null;
+        try{
+            connection = getConnection();
+            connection.setAutoCommit(false);
+            try (PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM Page WHERE id_Book = ?")) {
+                prepareStatement.setInt(1, getBookId(currentBook));
+                prepareStatement.execute();
+            }
+            try (PreparedStatement prepareStatement = connection.prepareStatement("INSERT INTO Page (text_Page, number_Page, id_Book) VALUES (?, ?, ?)")) {
+                for (Page page : currentBook.getPages()) {
+                    prepareStatement.setString(1, page.getTextPage());
+                    prepareStatement.setInt(2, page.getNumberPage());
+                    prepareStatement.setInt(3, getBookId(currentBook));
+                    prepareStatement.execute();
+                }
+            }
+            connection.commit();
+        }
+        catch  (SQLException | UnableToConnect e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des auteurs">
@@ -155,25 +198,52 @@ public class DbInfrastructure implements Repository {
 
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des pages">
     @Override
-    public List<Page> getAllPagesOfBook(Book book) throws UnableToGetAllPages {
-        var result = new ArrayList<Page>();
-
+    public Book addPagesToBook(Book book) throws UnableToGetAllPages, UnableToConstructPage, UnableToAddPage {
         try {
             int idBook = getBookId(book);
-            if (idBook == -1) return result;
+            if (idBook == -1) return book;
             PreparedStatement prepareStatement = getConnection().prepareStatement("SELECT * FROM Page WHERE id_Book = ?");
             prepareStatement.setInt(1, idBook);
             prepareStatement.execute();
             var resSet = prepareStatement.executeQuery();
             while (resSet.next()) {
-                result.add(new Page(resSet.getString("text_Page"), resSet.getInt("number_Page")));
+                var page = new Page(resSet.getString("text_Page"), resSet.getInt("number_Page"));
+                book.addPage(page);
             }
         } catch (UnableToConnect e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
             throw new UnableToGetAllPages();
         }
-        return result;
+        return book;
+    }
+
+    @Override
+    public void updatePage(Page page, String text) throws UnableToUpdatePage, UnableToConnect {
+        try {
+            PreparedStatement prepareStatement = getConnection().prepareStatement("UPDATE Page SET text_Page = ? WHERE number_Page = ? AND text_Page = ?");
+            prepareStatement.setString(1, text);
+            prepareStatement.setInt(2, page.getNumberPage());
+            prepareStatement.setString(3, page.getTextPage());
+            prepareStatement.execute();
+        } catch (SQLException e) {
+            throw new UnableToUpdatePage();
+        } catch (UnableToConnect e) {
+            throw new UnableToConnect();
+        }
+    }
+
+    @Override
+    public void createPage(String text, Book book) throws UnableToUpdatePage, UnableToConnect, UnableToCreatePage {
+        try {
+            PreparedStatement prepareStatement = getConnection().prepareStatement("INSERT INTO Page (text_Page, number_Page, id_Book) VALUES (?, ?, ?)");
+            prepareStatement.setString(1, text);
+            //prepareStatement.setInt(2, ;
+            prepareStatement.setInt(3, getBookId(book));
+
+        } catch (SQLException e) {
+            throw new UnableToConnect();
+        }
     }
 
     //</editor-fold>

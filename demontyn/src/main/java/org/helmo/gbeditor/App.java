@@ -18,6 +18,11 @@ public class App extends Application {
     public final static String DBUSER = "Q210037";
     public final static String DBPASS = "0037";
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
+/*    public final static String DBURL = "jdbc:derby:C:/Users/demon/OneDrive/Documents/HELMo/B2/AOUT/BD\\bd;";
+    public final static String DBUSER = "";
+    public final static String DBPASS = "";
+    private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";*/
+
 
 
     public static void main(String[] args) {

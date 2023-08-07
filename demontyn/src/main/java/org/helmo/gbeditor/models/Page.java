@@ -1,11 +1,17 @@
 package org.helmo.gbeditor.models;
 
+import org.helmo.gbeditor.models.exceptions.UnableToConstructPage;
+
 public class Page {
 
     private String textPage;
     private int numberPage;
 
-    public Page(String textPage, int numberPage) {
+    public Page(String textPage, int numberPage) throws  UnableToConstructPage {
+        if(textPage == null || textPage.isEmpty())
+            throw new UnableToConstructPage("textPage can't be null or empty");
+        if(textPage.length() > 1499)
+            throw new UnableToConstructPage("textPage can't be more than 1499 characters");
         this.textPage = textPage;
         this.numberPage = numberPage;
     }

@@ -6,6 +6,10 @@ public class PageVM {
     private String textPage;
     private int numberPage;
 
+    public PageVM(String textPage, int numberPage) {
+        this.textPage = textPage;
+        this.numberPage = numberPage;
+    }
     public PageVM(Page page) {
         this.textPage = page.getTextPage();
         this.numberPage = page.getNumberPage();
@@ -29,7 +33,4 @@ public class PageVM {
     }
     //</editor-fold>
 
-    public Page getPage() {
-        return new Page(textPage, numberPage);
-    }
 }

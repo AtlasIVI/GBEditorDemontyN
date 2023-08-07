@@ -4,6 +4,8 @@ package org.helmo.gbeditor.repository;
 import org.helmo.gbeditor.models.Autor;
 import org.helmo.gbeditor.models.Book;
 import org.helmo.gbeditor.models.Page;
+import org.helmo.gbeditor.models.exceptions.UnableToAddPage;
+import org.helmo.gbeditor.models.exceptions.UnableToConstructPage;
 import org.helmo.gbeditor.repository.exceptions.*;
 
 import java.util.List;
@@ -43,7 +45,20 @@ public interface Repository {
 
 
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des pages">
-    List<Page> getAllPagesOfBook(Book book) throws UnableToGetAllPages;
+
+    /**
+     * Cette méthode retourne un livre  remplis avec ses pages
+     * @param book
+     * @return
+     * @throws UnableToGetAllPages
+     */
+    Book addPagesToBook(Book book) throws UnableToGetAllPages, UnableToConstructPage, UnableToAddPage;
+
+    void updatePage(Page page, String text) throws UnableToUpdatePage, UnableToConnect;
+
+    void createPage(String text, Book book) throws UnableToUpdatePage, UnableToConnect,UnableToCreatePage;
+
+    void updatePageBook(Book currentBook);
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des pages">
 }
 

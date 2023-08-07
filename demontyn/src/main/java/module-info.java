@@ -11,6 +11,9 @@ module org.helmo {
 	requires mysql.connector.java;
 	requires java.sql;
 
+	//DERBY
+
+
 	exports org.helmo.gbeditor;
 
 }
