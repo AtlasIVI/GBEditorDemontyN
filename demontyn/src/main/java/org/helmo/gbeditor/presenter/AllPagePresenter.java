@@ -9,10 +9,7 @@ import org.helmo.gbeditor.presenter.arg.NavigationArg;
 import org.helmo.gbeditor.presenter.interfaceview.IAllPageView;
 import org.helmo.gbeditor.presenter.interfaceview.ViewType;
 import org.helmo.gbeditor.repository.Repository;
-import org.helmo.gbeditor.repository.exceptions.UnableToConnect;
-import org.helmo.gbeditor.repository.exceptions.UnableToCreatePage;
-import org.helmo.gbeditor.repository.exceptions.UnableToGetAllPages;
-import org.helmo.gbeditor.repository.exceptions.UnableToUpdatePage;
+import org.helmo.gbeditor.repository.exceptions.*;
 import org.helmo.gbeditor.viewmodels.BookVM;
 import org.helmo.gbeditor.viewmodels.PageVM;
 
@@ -40,9 +37,7 @@ public class AllPagePresenter {
             currentBook = repo.addPagesToBook(book);
             //Convertir en PageVM
             return currentBook.getPages().stream().map(PageVM::new).collect(Collectors.toList());
-        } catch (UnableToGetAllPages e) {
-            view.throwAlert("Unable to get all pages");
-        } catch (ModelException e) {
+        } catch (RepoException | ModelException e) {
             view.throwAlert(e.getMessage());
         }
         return null;
@@ -53,11 +48,7 @@ public class AllPagePresenter {
             var page = new Page(pageVM.getTextPage(), pageVM.getNumberPage());
             repo.updatePage(page, text);
             view.throwAlert("Page updated");
-        } catch (UnableToUpdatePage e) {
-            view.throwAlert("Unable to update page");
-        } catch (UnableToConnect e) {
-            view.throwAlert("Unable to connect to the server");
-        } catch (ModelException e) {
+        } catch (RepoException | ModelException e) {
             view.throwAlert(e.getMessage());
         }
     }
@@ -75,5 +66,33 @@ public class AllPagePresenter {
 
     public PageVM getLastPage() {
         return new PageVM(lastPageAdd);
+    }
+
+    public void onClickManageButton(NavigationArg args, PageVM pageVM) {
+        try {
+            var page = pageVM.getPage();
+            var newArgs = new NavigationArg(args.getAutor(),args.getBook(), page);
+            view.goTo(ViewType.MANAGE_LINK, newArgs);
+        } catch (ModelException e) {
+            view.throwAlert(e.getMessage());
+        }
+    }
+
+    public void deletePage(PageVM page) {
+        var confirmDeletePage = view.throwAlertWithConfirm("Are you sure you want to delete this page ?");
+        if (!confirmDeletePage) return;
+
+        try {
+            currentBook.removePage(page.getNumberPage());
+            currentBook.rearangePageNumber();
+            repo.updatePageBook(currentBook);
+        } catch (ModelException e) {
+            view.throwAlert(e.getMessage());
+        }
+        view.throwAlert("Page deleted");
+    }
+
+    public List<PageVM> getCurrentBookPages() {
+        return currentBook.getPages().stream().map(PageVM::new).collect(Collectors.toList());
     }
 }

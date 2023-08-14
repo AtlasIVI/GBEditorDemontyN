@@ -56,6 +56,7 @@ public class CreateBookView extends ViewJavaFx implements ICreateBookView {
     @Override
     public void beforeShow(NavigationArg args) {
 
+        lAutorName.setText("Autor : " +args.getAutor().getCompletName());
         GridPane centerCreateBookPane = new GridPane();
 
         {

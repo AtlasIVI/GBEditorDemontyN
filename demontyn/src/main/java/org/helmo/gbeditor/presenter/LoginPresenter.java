@@ -13,7 +13,7 @@ public class LoginPresenter {
 
     private ILoginView view;
 
-    private Repository repo;
+    private final Repository repo;
 
     public LoginPresenter(Repository repo) {
         this.repo = repo;

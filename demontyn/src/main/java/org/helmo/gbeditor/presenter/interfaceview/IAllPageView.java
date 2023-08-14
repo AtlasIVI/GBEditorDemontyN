@@ -7,6 +7,8 @@ public interface IAllPageView {
     void goTo(ViewType type, NavigationArg args);
 
     void throwAlert(String message);
+    boolean throwAlertWithConfirm(String content);
+
 
 
 }

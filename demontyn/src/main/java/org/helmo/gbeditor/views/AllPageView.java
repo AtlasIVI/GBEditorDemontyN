@@ -3,6 +3,7 @@ package org.helmo.gbeditor.views;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -42,6 +43,7 @@ public class AllPageView extends ViewJavaFx implements IAllPageView {
     private GridPane leftPane;
 
     private GridPane centerPane = new GridPane();
+    private Button deleteBtn;
 
 
     {
@@ -73,6 +75,7 @@ public class AllPageView extends ViewJavaFx implements IAllPageView {
         pageVMList = presenter.getAllPages(args.getBook());
         updatePageBtn = new Button("Update");
         manageLinkBtn = new Button("Manage Links");
+        deleteBtn = new Button("Delete Page");
         labContent = new Label("Content");
         entryContent = new TextArea();
         initLeftPane(args);
@@ -99,7 +102,7 @@ public class AllPageView extends ViewJavaFx implements IAllPageView {
             leftPane.add(new Label("Autor : " + args.getAutor().getCompletName()), 0, 1);
             leftPane.add(new Label("Book : " + args.getBook().getTitle()), 0, 2);
             var addPageBtn = new Button("Add Page");
-            addPageBtn.setOnAction(event -> initCreatePage(args));
+            addPageBtn.setOnAction(event -> initCreatePage());
             leftPane.add(addPageBtn, 0, 4);
 
         }
@@ -112,6 +115,7 @@ public class AllPageView extends ViewJavaFx implements IAllPageView {
 
         updatePageBtn.setVisible(false);
         manageLinkBtn.setVisible(false);
+        deleteBtn.setVisible(false);
         rigthCreatePagePane.setHgap(10);
         rigthCreatePagePane.setVgap(10);
         rigthCreatePagePane.setPadding(new Insets(10, 10, 10, 10));
@@ -122,6 +126,7 @@ public class AllPageView extends ViewJavaFx implements IAllPageView {
         rigthCreatePagePane.add(entryContent, 1, 3);
         rigthCreatePagePane.add(updatePageBtn, 1, 5);
         rigthCreatePagePane.add(manageLinkBtn, 1, 6);
+        rigthCreatePagePane.add(deleteBtn, 1, 7);
 
 
         table.setOnMouseClicked(event -> {
@@ -130,6 +135,7 @@ public class AllPageView extends ViewJavaFx implements IAllPageView {
                 labContent.setVisible(true);
                 entryContent.setVisible(true);
                 updatePageBtn.setVisible(true);
+                deleteBtn.setVisible(true);
                 updatePageBtn.setText("Update Page");
                 manageLinkBtn.setVisible(true);
                 entryContent.setText(pageVM.getTextPage());
@@ -138,9 +144,14 @@ public class AllPageView extends ViewJavaFx implements IAllPageView {
                     pageVM.setTextPage(entryContent.getText());
                     table.refresh();
                 });
+                manageLinkBtn.setOnAction(action -> { presenter.onClickManageButton(args, pageVM);
+                });
+                deleteBtn.setOnAction(action -> {
+                    presenter.deletePage(pageVM);
+                    pageVMList =  presenter.getCurrentBookPages();
+                    table.setItems(FXCollections.observableArrayList(pageVMList));
 
-
-                //manageLinkBtn.setOnAction(action -> this.goTo(ViewType.All_LINKS, new NavigationArg(args.getBook(), page, null)));
+                });
             } else {
                 labContent.setVisible(false);
                 entryContent.setVisible(false);
@@ -162,7 +173,9 @@ public class AllPageView extends ViewJavaFx implements IAllPageView {
         table.setItems(FXCollections.observableArrayList(pageVMList));
     }
 
-    public void initCreatePage(NavigationArg args){
+    public void initCreatePage(){
+        deleteBtn.setVisible(false);
+        manageLinkBtn.setVisible(false);
         entryContent.setText("");
         entryContent.setVisible(true);
         updatePageBtn.setVisible(true);

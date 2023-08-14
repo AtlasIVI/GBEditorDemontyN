@@ -6,12 +6,13 @@ public class Page {
 
     private String textPage;
     private int numberPage;
+    private int idBook;
 
     public Page(String textPage, int numberPage) throws  UnableToConstructPage {
         if(textPage == null || textPage.isEmpty())
-            throw new UnableToConstructPage("textPage can't be null or empty");
+            throw new UnableToConstructPage();
         if(textPage.length() > 1499)
-            throw new UnableToConstructPage("textPage can't be more than 1499 characters");
+            throw new UnableToConstructPage();
         this.textPage = textPage;
         this.numberPage = numberPage;
     }
@@ -32,4 +33,12 @@ public class Page {
         this.numberPage = numberPage;
     }
 
+    public int getIdBook() {
+
+        return idBook;
+    }
+
+    public void setIdBook(int idBook) {
+        this.idBook = idBook;
+    }
 }

@@ -46,4 +46,7 @@ public class BookVM {
     public List<PageVM> getPages() {
         return pages;
     }
+    public void setPages(List<PageVM> pages) {
+        this.pages = pages;
+    }
 }

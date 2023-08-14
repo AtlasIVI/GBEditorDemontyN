@@ -10,7 +10,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import org.helmo.gbeditor.presenter.AllBooksPresenter;
@@ -38,6 +37,7 @@ public class AllBooksView extends ViewJavaFx implements IAllBooksView {
     //<editor-fold defaultstate="collapsed" desc="Menu latéral du livre sélectionné">
     private Label titleLabel = new Label();
     private Label resumeLabel = new Label();
+    private Button publishBtn = new Button();
     private Label isbnLabel = new Label();
     private Label nbrPage = new Label();
     private Button editBtn = new Button("Edit");
@@ -74,7 +74,9 @@ public class AllBooksView extends ViewJavaFx implements IAllBooksView {
         rightPane.add(isbnLabel, 0, 2);
         rightPane.add(nbrPage,0, 3);
         rightPane.add(buttonBox, 0, 4);
+        rightPane.add(publishBtn,1,0);
         rightPane.setVisible(false);
+
 
     }
 
@@ -83,10 +85,6 @@ public class AllBooksView extends ViewJavaFx implements IAllBooksView {
         this.presenter = presenter;
         this.presenter.setView(this);
         root = new BorderPane();
-
-
-
-
     }
 
     @Override
@@ -144,14 +142,40 @@ public class AllBooksView extends ViewJavaFx implements IAllBooksView {
 
         table.setOnMouseClicked(event -> {
             var book = table.getSelectionModel().getSelectedItem();
+
             if (book != null) {
+                book.setPages(presenter.getPages(args, book.getBook()));
+                if(book.getPages() != null){
+                    if(presenter.isBookPublished(book.getBook())){
+                        publishBtn.setText("Unpublish");
+                        publishBtn.setOnMouseClicked(event1 -> {
+                            presenter.unPublishBook(args, book.getBook());
+                        });
+                        editBtn.setVisible(false);
+                        deleteBtn.setVisible(false);
+                        addPageBtn.setVisible(false);
+                    }
+                    else  {
+                        publishBtn.setText("Publish");
+                        publishBtn.setOnMouseClicked(event1 -> {
+                            presenter.publishBook(args, book.getBook());
+                        });
+                        editBtn.setVisible(true);
+                        deleteBtn.setVisible(true);
+                        addPageBtn.setVisible(true);
+                    }
+                }
+
                 rightPane.setVisible(true);
                 titleLabel.setText("Title : " + book.getTitle());
                 resumeLabel.setText("Resume : " + book.getResume());
                 isbnLabel.setText("ISBN : " + book.getIsbn());
-                nbrPage.setText("Nombre de pages : A FAIRE APRES LES PAGES"  );
                 editBtn.setOnAction(action -> this.goTo(ViewType.EDIT_BOOK, new NavigationArg(args.getAutor(), book.getBook(), null)));
                 addPageBtn.setOnAction(action -> this.goTo(ViewType.All_PAGES, new NavigationArg(args.getAutor(), book.getBook(), null)));
+                deleteBtn.setOnAction(action -> {
+                    presenter.deleteBook(args, book.getBook());
+                });
+
 
             } else {
                 titleLabel.setText("");

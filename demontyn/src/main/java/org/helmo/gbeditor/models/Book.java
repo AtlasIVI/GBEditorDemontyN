@@ -3,9 +3,12 @@ package org.helmo.gbeditor.models;
 import org.helmo.gbeditor.models.exceptions.ModelException;
 import org.helmo.gbeditor.models.exceptions.UnableToAddPage;
 import org.helmo.gbeditor.models.exceptions.UnableToConstructPage;
+import org.helmo.gbeditor.viewmodels.PageVM;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Book {
 
@@ -68,5 +71,24 @@ public class Book {
     }
     public void removePage(int number){
         pages.removeIf(page -> page.getNumberPage() == number);
+    }
+    public List<Integer> getPagesNumber(){
+        List<Integer> result = new ArrayList<>();
+        for (var page : pages) {
+            result.add(page.getNumberPage());
+        }
+        return result;
+    }
+
+    public void rearangePageNumber() throws UnableToConstructPage {
+        var tempList = List.copyOf(pages);
+
+        pages.clear();
+        for (Page page : tempList) {
+            page.setNumberPage(1);
+            addPageWithGeneratedNumber(page.getTextPage());
+        }
+
+
     }
 }

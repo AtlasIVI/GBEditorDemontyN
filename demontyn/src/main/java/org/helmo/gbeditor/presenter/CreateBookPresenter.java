@@ -1,11 +1,13 @@
 package org.helmo.gbeditor.presenter;
 
 import org.helmo.gbeditor.models.Book;
+import org.helmo.gbeditor.models.exceptions.ModelException;
 import org.helmo.gbeditor.presenter.arg.NavigationArg;
 import org.helmo.gbeditor.presenter.interfaceview.ICreateBookView;
 import org.helmo.gbeditor.presenter.interfaceview.ILoginView;
 import org.helmo.gbeditor.presenter.interfaceview.ViewType;
 import org.helmo.gbeditor.repository.Repository;
+import org.helmo.gbeditor.repository.exceptions.RepoException;
 
 public class CreateBookPresenter {
     private ICreateBookView view;
@@ -40,8 +42,8 @@ public class CreateBookPresenter {
             repo.saveBook(book);
 
             view.goTo(ViewType.SEE_ALL_BOOKS,new NavigationArg(args.autor,book,null));
-        } catch (Exception e) {
-            view.throwAlert("Unable to save book");
+        } catch (RepoException e) {
+            view.throwAlert(e.getMessage());
         }
 
     }

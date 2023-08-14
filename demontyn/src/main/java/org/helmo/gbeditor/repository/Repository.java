@@ -3,6 +3,7 @@ package org.helmo.gbeditor.repository;
 
 import org.helmo.gbeditor.models.Autor;
 import org.helmo.gbeditor.models.Book;
+import org.helmo.gbeditor.models.Link;
 import org.helmo.gbeditor.models.Page;
 import org.helmo.gbeditor.models.exceptions.UnableToAddPage;
 import org.helmo.gbeditor.models.exceptions.UnableToConstructPage;
@@ -41,8 +42,17 @@ public interface Repository {
      */
     Autor getAutorByNames(String firstname, String lastname) throws UnableToGetAutor, UnableToConnect;
 
+    void deleteBook(Book currentBook);
+
     void saveBook(Book book) throws UnableToConnect, UnableToSaveBook;
 
+
+    //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des pages">
+
+    //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des pages">
+    List<Page> getPagesExceptArg(Book book, int pageNumber) throws UnableToConnect, UnableToGetPages, UnableToConstructPage, UnableToGetPageId;
+
+    //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des pages">
 
     //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des pages">
 
@@ -59,6 +69,17 @@ public interface Repository {
     void createPage(String text, Book book) throws UnableToUpdatePage, UnableToConnect,UnableToCreatePage;
 
     void updatePageBook(Book currentBook);
-    //<editor-fold defaultstate="collapsed" desc="Les methodes de traitement BD des pages">
+
+    void addNewLink(Page currentPage, Page nextPage, String text,Book book) throws UnableToGetPageId, UnableToConnect, UnableToAddLink;
+
+    List<Link> getAllLinkOfPage(Book book, Page page) throws UnableToGetAllLinks, UnableToConstructLink, UnableToGetPageId, UnableToConnect;
+
+    void updateAllLink(List<Link> listLink, Book book);
+
+    int getBookComplete(Book book) throws UnableToGetBook, UnableToConnect;
+
+    void publishBook(Book book) throws UnableToGetBook, UnableToConnect;
+
+    void unPublishBook(Book book) throws UnableToGetBook, UnableToConnect;
 }
 

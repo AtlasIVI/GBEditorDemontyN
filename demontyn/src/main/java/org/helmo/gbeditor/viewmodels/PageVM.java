@@ -1,6 +1,8 @@
 package org.helmo.gbeditor.viewmodels;
 
 import org.helmo.gbeditor.models.Page;
+import org.helmo.gbeditor.models.exceptions.ModelException;
+import org.helmo.gbeditor.models.exceptions.UnableToConstructPage;
 
 public class PageVM {
     private String textPage;
@@ -30,6 +32,11 @@ public class PageVM {
 
     public void setNumberPage(int numberPage) {
         this.numberPage = numberPage;
+    }
+
+    public Page getPage() throws UnableToConstructPage {
+            return new Page(textPage, numberPage);
+
     }
     //</editor-fold>
 

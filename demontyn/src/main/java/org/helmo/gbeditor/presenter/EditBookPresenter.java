@@ -1,11 +1,13 @@
 package org.helmo.gbeditor.presenter;
 
 import org.helmo.gbeditor.models.Book;
+import org.helmo.gbeditor.models.exceptions.ModelException;
 import org.helmo.gbeditor.presenter.arg.NavigationArg;
 import org.helmo.gbeditor.presenter.interfaceview.IEditBookView;
 import org.helmo.gbeditor.presenter.interfaceview.ILoginView;
 import org.helmo.gbeditor.presenter.interfaceview.ViewType;
 import org.helmo.gbeditor.repository.Repository;
+import org.helmo.gbeditor.repository.exceptions.RepoException;
 import org.helmo.gbeditor.repository.exceptions.UnableToConnect;
 import org.helmo.gbeditor.repository.exceptions.UnableToEditBook;
 
@@ -37,10 +39,8 @@ public class EditBookPresenter {
             var newBook = new Book(title, resume, args.getBook().getIsbn(), args.getBook().getAutorMatricule());
             repo.editBook(args.getBook(),newBook);
             view.goTo(ViewType.SEE_ALL_BOOKS, new NavigationArg(args.getAutor(),null,null));
-        } catch (UnableToEditBook e) {
-            view.throwAlert("Impossible de modifier le livre");
-        } catch (UnableToConnect e) {
-            view.throwAlert("Impossible de se connecter à la base de données");
+        } catch (RepoException e) {
+            view.throwAlert(e.getMessage());
         }
 
     }

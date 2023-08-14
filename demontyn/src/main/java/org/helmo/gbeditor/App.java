@@ -42,7 +42,8 @@ public class App extends Application {
                 new AllBooksView(new AllBooksPresenter(repo)),
                 new CreateBookView(new CreateBookPresenter(repo)),
                 new EditBookView(new EditBookPresenter(repo)),
-                new AllPageView(new AllPagePresenter(repo))
+                new AllPageView(new AllPagePresenter(repo)),
+                new ManageLinkView(new ManageLinkPresenter(repo))
         );
 
 
